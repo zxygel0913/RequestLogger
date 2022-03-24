@@ -7,7 +7,7 @@
 Require this package in your `composer.json` or install it by running:
 
 ```
-composer require zxygel0913/RequestLogger
+composer require zxygel0913/request-logger
 ```
 
 To start using Laravel, add the Service Provider to your `config/app.php`:
