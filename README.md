@@ -2,6 +2,8 @@
 
 > Easily logs all request and response
 
+[![Issues](https://img.shields.io/github/issues/zxygel0913/request-logger)](https://github.com/guzzle/guzzle/releases)
+
 ## Installation
 
 Require this package in your `composer.json` or install it by running:
