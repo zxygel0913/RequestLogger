@@ -15,7 +15,7 @@ To start using Laravel, add the Service Provider to your `config/app.php`:
 ```php
 'providers' => [
 	// ...
-	zxygel0913\RequestLogger\RequestLoggerServiceProvider::class
+	Zxygel0913\RequestLogger\RequestLoggerServiceProvider::class
 ]
 ```
 
