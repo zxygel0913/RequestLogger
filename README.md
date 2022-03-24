@@ -2,7 +2,7 @@
 
 > Easily logs all request and response
 
-[![Issues](https://img.shields.io/github/issues/zxygel0913/request-logger)](https://github.com/guzzle/guzzle/releases)
+[![Issues](https://img.shields.io/github/issues/zxygel0913/request-logger)](https://github.com/zxygel0913/request-logger)
 
 ## Installation
 
