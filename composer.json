@@ -8,8 +8,6 @@
             "email": "68549062+zxygel0913@users.noreply.github.com"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable" : true,
     "require": {},
     "autoload": {
         "psr-4": {
