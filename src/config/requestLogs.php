@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'channel' => 'daily', //Log Channel
+    'channel' => 'system_daily', //Log Channel
     'logs' => [
         'headers' => true,
         'path' => true,
@@ -12,3 +12,4 @@ return [
         'request_except' => ['password'] //Hide specific request from logging
     ],
 ];
+

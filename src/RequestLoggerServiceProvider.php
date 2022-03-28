@@ -26,6 +26,16 @@ class RequestLoggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        app('log')->stack([
+            'channels' => [
+                'system_daily' => [
+                    'driver' => 'daily',
+                    'path' => storage_path('logs/app/request-logs/laravel.log'),
+                    'level' => 'debug',
+                    'days' => 30,
+                ]
+            ]
+        ]);
         $router = $this->app['router'];
         $router->pushMiddlewareToGroup('api', LogAfterRequest::class);
     }
