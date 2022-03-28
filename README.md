@@ -48,3 +48,6 @@ return [
         'request_except' => ['password'] //Hide specific request from logging
     ],
 ```
+## Testing
+
+Make any request and check your logs. 
