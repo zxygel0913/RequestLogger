@@ -17,6 +17,11 @@ class RequestLoggerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/requestLogs.php' => config_path('requestLogs.php')
         ], 'requestLogs');
+        $this->app->make('config')->set('logging.channels.system_daily', [
+            'driver' => 'daily',
+            'path' => storage_path('logs/app/request-logs/laravel.logg'),
+            'level' => 'debug',
+        ]);
     }
 
     /**
@@ -26,16 +31,6 @@ class RequestLoggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        app('log')->stack([
-            'channels' => [
-                'system_daily' => [
-                    'driver' => 'daily',
-                    'path' => storage_path('logs/app/request-logs/laravel.log'),
-                    'level' => 'debug',
-                    'days' => 30,
-                ]
-            ]
-        ]);
         $router = $this->app['router'];
         $router->pushMiddlewareToGroup('api', LogAfterRequest::class);
     }
