@@ -17,11 +17,6 @@ class RequestLoggerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/requestLogs.php' => config_path('requestLogs.php')
         ], 'requestLogs');
-        $this->app->make('config')->set('logging.channels.system_daily', [
-            'driver' => 'daily',
-            'path' => storage_path('logs/app/request-logs/laravel.logg'),
-            'level' => 'debug',
-        ]);
     }
 
     /**
