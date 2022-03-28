@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'channel' => 'system_daily', //Log Channel
+    'channel' => 'daily', //Log Channel
     'logs' => [
         'headers' => true,
         'path' => true,
