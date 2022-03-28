@@ -10,7 +10,6 @@
             "Zxygel0913\\RequestLogger\\": "src/"
         }
     },
-    "require": {},
     "extra": {
         "laravel":{
             "providers":[
@@ -23,5 +22,8 @@
             "name": "Jay",
             "email": "68549062+zxygel0913@users.noreply.github.com"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=7.0"
+    }
 }
