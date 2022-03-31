@@ -1,4 +1,4 @@
-# Laravel Request Logger
+# Laravel API Request Logger
 
 > Easily logs all request and response
 
