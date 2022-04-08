@@ -39,10 +39,8 @@ If you have published config file, you can change the default settings in `confi
 return [
     'channel' => 'daily', //Log Channel
     'logs' => [
-        'headers' => true,
-        'path' => true,
+        'url' => true,
         'ip' => true,
-        'request_method' => true,
         'request' => true,
         'response' => false,
         'request_except' => ['password'] //Hide specific request from logging

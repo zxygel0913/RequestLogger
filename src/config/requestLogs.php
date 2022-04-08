@@ -3,10 +3,8 @@
 return [
     'channel' => 'daily', //Log Channel
     'logs' => [
-        'headers' => true,
-        'path' => true,
+        'url' => true,
         'ip' => true,
-        'request_method' => true,
         'request' => true,
         'response' => false,
         'request_except' => ['password'] //Hide specific request from logging
