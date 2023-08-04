@@ -1,32 +1,29 @@
 <?php
 
-namespace Zxygel0913\RequestLogger;
+namespace Zxygel0913\QueryLoggerMiddleware;
 
 use Illuminate\Support\ServiceProvider;
-use Zxygel0913\RequestLogger\Middleware\LogAfterRequest;
+use Zxygel0913\QueryLoggerMiddleware\Middleware\LogQueries; // Import the LogQueries middleware
 
-class RequestLoggerServiceProvider extends ServiceProvider
+class QueryLoggerMiddlewareServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__.'/config/requestLogs.php' => config_path('requestLogs.php')
-        ], 'requestLogs');
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+    
     public function register()
     {
-        $router = $this->app['router'];
-        $router->pushMiddlewareToGroup('api', LogAfterRequest::class);
+        $this->mergeConfigFrom(__DIR__.'/config/query-logger.php', 'query-logger');
+
+        $this->publishes([
+            __DIR__.'/config/query-logger.php' => config_path('query-logger.php'),
+        ], 'config');
+    }
+
+    public function boot()
+    {
+        $this->app['router']->aliasMiddleware('logqueries', LogQueries::class);
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/config/query-logger.php' => config_path('query-logger.php'),
+            ], 'query-logger-config'); // Use the correct tag here
+        }
     }
 }
