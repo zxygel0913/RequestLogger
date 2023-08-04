@@ -1,75 +1,71 @@
 <?php
-namespace Zxygel0913\RequestLogger\Middleware;
+
+namespace Zxygel0913\QueryLoggerMiddleware\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
-class LogAfterRequest
+class LogQueries
 {
-    public function handle($request, \Closure  $next)
-	{
-        $user = $this->getUser();
-        $MAC = exec('getmac');
-        
-        $MAC = strtok($MAC, ' ');
-		Log::channel(config('requestLogs.channel')?? 'daily')->info('app.requests', [
-            'user_id' => $user ? $user->id : $user,
-            'ip' => config('requestLogs.logs.ip') ? Request::ip() : null,
-            'url' => config('requestLogs.logs.url') ? Request::fullUrl() : null,
-            'request_method' => Request::method(),
-            'request' => config('requestLogs.logs.request') ? Request::except(config('requestLogs.logs.request_except')) : null,
-            'mac_adrress' => $MAC,
-            'browser' => $this->getBrowser()
-        ]);
-		return $next($request);
-	}
+    protected $loggedQueries = [];
 
-	public function terminate($request, $response)
-	{
-		Log::channel(config('requestLogs.channel')?? 'daily')->info('app.response', [
-            'response' => config('requestLogs.logs.response') ? $response : null
-        ]);
-	}
-
-    public function getBrowser() {
-
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $browser = "N/A";
-        
-        $browsers = array(
-        '/msie/i' => 'Internet explorer',
-        '/firefox/i' => 'Firefox',
-        '/safari/i' => 'Safari',
-        '/chrome/i' => 'Chrome',
-        '/edge/i' => 'Edge',
-        '/opera/i' => 'Opera',
-        '/mobile/i' => 'Mobile browser'
-        );
-        
-        foreach ($browsers as $regex => $value) {
-        if (preg_match($regex, $user_agent)) { $browser = $value; }
-        }
-        
-        return $browser;
-    }
-
-    public function getUser()
+    public function handle(Request $request, Closure $next): Response
     {
-        $guards = ['api','web'];
-
-        foreach ($guards as $guard) {
-            try {
-                $authenticated = Auth::guard($guard);
-            } catch (\Exception $exception) {
-                continue;
-            }
-
-            if ($authenticated) {
-                return Auth::guard($guard)->user();
-            }
+        // Check if query logging is enabled for this request
+        if (config('app.debug') && config('query-logger.log_queries')) {
+            DB::listen(function ($query) use ($request) {
+                // Check if this query has already been logged recently
+                if ($this->shouldLogQuery($query)) {
+                    $this->logQuery($query, $request);
+                }
+            });
         }
 
-        return null;
+        return $next($request);
     }
 
+    protected function shouldLogQuery($query)
+    {
+        $hash = md5($query->sql . serialize($query->bindings));
+
+        if (in_array($hash, $this->loggedQueries)) {
+            return false;
+        }
+
+        $this->loggedQueries[] = $hash;
+
+        // Remove old hashes to prevent memory growth
+        $this->loggedQueries = array_slice($this->loggedQueries, -100);
+
+        return true;
+    }
+
+    protected function logQuery($query, $request)
+    {
+        $urlOrigin = $request->headers->get('origin') ?? 'Unknown Origin';
+        $ipAddress = $request->ip();
+
+        $executionTime = round($query->time / 1000, 2); // Convert to seconds
+
+        // Log only queries that take longer than 100ms
+        if ($executionTime > 0.1) {
+            Log::warning('Slow Query: ' . $query->sql, [
+                'bindings' => $query->bindings,
+                'execution_time' => $executionTime . 's',
+                'url_origin' => $urlOrigin,
+                'ip_address' => $ipAddress,
+            ]);
+        } else {
+            Log::debug('Query: ' . $query->sql, [
+                'bindings' => $query->bindings,
+                'execution_time' => $executionTime . 's',
+                'url_origin' => $urlOrigin,
+                'ip_address' => $ipAddress,
+            ]);
+        }
+    }
+    
 }
