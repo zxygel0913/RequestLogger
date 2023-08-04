@@ -1,29 +1,24 @@
 {
-    "name": "zxygel0913/request-logger",
-    "description": "Log all request",
+    "name": "zxygel0913/query-logger-middleware",
+    "description": "Laravel middleware for logging queries with duplicate prevention.",
     "type": "library",
+    "keywords": ["laravel", "middleware", "query logging"],
     "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Zxygel0913\\RequestLogger\\": "src/"
+            "Zxygel0913\\QueryLoggerMiddleware\\": "src/"
         }
     },
     "extra": {
         "laravel":{
             "providers":[
-                "Zxygel0913\\RequestLogger\\RequestLoggerServiceProvider"
+                "Zxygel0913\\QueryLoggerMiddleware\\QueryLoggerMiddlewareServiceProvider"
             ]
         }
     },
-    "authors": [
-        {
-            "name": "Jay",
-            "email": "68549062+zxygel0913@users.noreply.github.com"
-        }
-    ],
     "require": {
-        "php": ">=7.0"
-    }
+        "php": "^8.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
